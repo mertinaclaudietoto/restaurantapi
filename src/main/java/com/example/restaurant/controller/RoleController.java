@@ -2,14 +2,18 @@ package com.example.restaurant.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.restaurant.dto.ApiResponse;
+import com.example.restaurant.dto.RoleDTO;
 import com.example.restaurant.model.Role;
 import com.example.restaurant.service.RoleService;
 
@@ -27,24 +31,26 @@ public class RoleController {
     public List<Role> getRole() {
         return roleService.getAllRole();
     }
-    @GetMapping("/hello")
-        public String hello(){
-        return "Hello Spring Boot API";
-    }
 
     @PostMapping
-    public Role createUser(@RequestBody Role user) {
-        return roleService.saveUser(user);
+    public Role createUser(@RequestBody RoleDTO user) {
+        return roleService.save(user);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Role>> updateUser(@PathVariable Long id, @RequestBody RoleDTO user) {
+        Role updatedRole = roleService.update(id, user); // peut lancer NotFoundException
+        ApiResponse<Role> response = new ApiResponse<>(200, "Role updated successfully", updatedRole);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public Role getUser(@PathVariable Long id) {
-        return roleService.getUser(id);
+        return roleService.get(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        roleService.deleteUser(id);
+        roleService.delete(id);
     }
 
 }
