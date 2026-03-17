@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.restaurant.exception.NotFoundException;
 import com.example.restaurant.model.Users;
 import com.example.restaurant.repository.UserRepository;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.example.restaurant.exception.NotFoundException;
 
 @Service
 public class AuthService {

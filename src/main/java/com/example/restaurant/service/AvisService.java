@@ -2,6 +2,8 @@ package com.example.restaurant.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,16 +21,20 @@ public class AvisService {
     private final AvisRepository AvisRepository;
     
 
-    public List<Avis> getAll() {
-        return AvisRepository.findAll();
+    public Page<Avis> getAll(Long restaurantId, Pageable pageable) {
+    if (restaurantId != null) {
+        return AvisRepository.findByRestaurantId(restaurantId, pageable);
+    } else {
+        return AvisRepository.findAll(pageable);
     }
+}
 
-    public Avis save(AvisDTO dto) {
+    public Avis save(Long id,AvisDTO dto) {
         Avis avis = new Avis();
         avis.setNote(dto.getNote());
         avis.setCommentaire(dto.getCommentaire());
         avis.setUserId(dto.getUserId());
-        avis.setRestaurantId(dto.getRestaurantId());
+        avis.setRestaurantId(id);
         return AvisRepository.save(avis);
     }
     @Transactional

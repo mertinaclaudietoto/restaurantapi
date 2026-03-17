@@ -37,20 +37,24 @@ public class RoleController {
         return roleService.save(user);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Role>> updateUser(@PathVariable Long id, @RequestBody RoleDTO user) {
-        Role updatedRole = roleService.update(id, user); // peut lancer NotFoundException
-        ApiResponse<Role> response = new ApiResponse<>(200, "Role updated successfully", updatedRole);
+    public ResponseEntity<ApiResponse<RoleDTO>> updateUser(@PathVariable Long id, @RequestBody RoleDTO user) {
+        RoleDTO updatedRole = roleService.update(id, user); // peut lancer NotFoundException
+        ApiResponse<RoleDTO> response = new ApiResponse<>(200, "Role updated successfully", updatedRole);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public Role getUser(@PathVariable Long id) {
-        return roleService.get(id);
+    public ResponseEntity<ApiResponse<RoleDTO>> getUser(@PathVariable Long id) {
+        RoleDTO updatedRole =roleService.get(id);
+        ApiResponse<RoleDTO> response = new ApiResponse<>(200, "Role get successfully", updatedRole);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Long id) {
         roleService.delete(id);
+        ApiResponse<Boolean> response = new ApiResponse<>(200, String.format("Role %d deleted successfully", id), true);
+        return ResponseEntity.ok(response);
     }
 
 }

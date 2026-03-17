@@ -30,14 +30,23 @@ public class RoleService {
     }
 
     @Transactional
-    public Role update(Long id, RoleDTO roleDTO) {
+    public RoleDTO update(Long id, RoleDTO roleDTO) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Role not found with id: " + id));
         role.setName(roleDTO.getName());
-        return roleRepository.save(role);
+        Role value = roleRepository.save(role);
+        return buildRoleDTO(value);
+
     }
-    public Role get(Long id) {
-        return roleRepository.findById(id).orElse(null);
+    public RoleDTO buildRoleDTO(Role value){
+        RoleDTO response = new RoleDTO();
+        response.setName(value.getName());
+        response.setId(value.getId());
+        return response;    
+    } 
+    public RoleDTO get(Long id) {
+        Role value = roleRepository.findById(id).orElse(null);
+        return buildRoleDTO(value);
     }
 
     public void delete(Long id) {

@@ -1,13 +1,11 @@
 package com.example.restaurant.controller;
 
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,15 +26,14 @@ public class PlatController {
 
     private final PlatService _service;
 
-    @GetMapping
-    public List<Plat> getUsers() {
-        return _service.getAll();
-    }
-    @PostMapping
-    public ResponseEntity<ApiResponse<Plat>> createUser(@Valid @RequestBody PlatDTO  user) {
-      
-        Plat updated =_service.save(user); // peut lancer NotFoundException
-        ApiResponse<Plat> response = new ApiResponse<>(200, "Plat add successfully", updated);
+    // @GetMapping
+    // public List<Plat> getUsers() {
+    //     return _service.getAll();
+    // }
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Plat>> createUser(@PathVariable Long id,@Valid @RequestBody PlatDTO  user) {
+        Plat updated =_service.update(id,user);
+        ApiResponse<Plat> response = new ApiResponse<>(200, "Plat update successfully", updated);
         return ResponseEntity.ok(response);
     }
 
@@ -46,8 +43,10 @@ public class PlatController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Long id) {
         _service.delete(id);
+        ApiResponse<Boolean> response = new ApiResponse<>(200, String.format("Plat %d deleted successfully", id), true);
+        return ResponseEntity.ok(response);
     }
 
 }
