@@ -3,6 +3,7 @@ package com.example.restaurant.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,22 +28,24 @@ public class RoleController {
 
     private final RoleService roleService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<Role> getRole() {
         return roleService.getAllRole();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Role createUser(@RequestBody RoleDTO user) {
         return roleService.save(user);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<RoleDTO>> updateUser(@PathVariable Long id, @RequestBody RoleDTO user) {
         RoleDTO updatedRole = roleService.update(id, user); // peut lancer NotFoundException
         ApiResponse<RoleDTO> response = new ApiResponse<>(200, "Role updated successfully", updatedRole);
         return ResponseEntity.ok(response);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<RoleDTO>> getUser(@PathVariable Long id) {
         RoleDTO updatedRole =roleService.get(id);
@@ -50,6 +53,7 @@ public class RoleController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Long id) {
         roleService.delete(id);

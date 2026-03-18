@@ -2,6 +2,7 @@ package com.example.restaurant.controller;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class PlatController {
     // public List<Plat> getUsers() {
     //     return _service.getAll();
     // }
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Plat>> createUser(@PathVariable Long id,@Valid @RequestBody PlatDTO  user) {
         Plat updated =_service.update(id,user);
@@ -37,13 +39,15 @@ public class PlatController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
-    public Plat getUser(@PathVariable Long id) {
+    public Plat get(@PathVariable Long id) {
         return _service.get(id);
     }
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Boolean>> delete(@PathVariable Long id) {
         _service.delete(id);
         ApiResponse<Boolean> response = new ApiResponse<>(200, String.format("Plat %d deleted successfully", id), true);
         return ResponseEntity.ok(response);

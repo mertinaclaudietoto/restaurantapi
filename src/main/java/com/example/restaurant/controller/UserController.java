@@ -34,7 +34,7 @@ public class UserController {
         return userService.getAllUsers(pageable);
     }
     
-    @PostMapping
+    @PostMapping("register")
     public ResponseEntity<ApiResponse< UserResponseDTO>> createUser(@Valid @RequestBody UserDTO user) {
       
         UserResponseDTO updatedRole =userService.saveUser(user); // peut lancer NotFoundException

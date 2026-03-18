@@ -11,6 +11,7 @@ import org.springframework.hateoas.EntityModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,13 +46,14 @@ public class RestaurantController {
     private final PlatService _servicePlat;
     private final AvisService _serviceAvis;
 
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     public ResponseEntity<ApiResponse<Page<Restaurant>>> getRestaurants(Pageable pageable) {
         Page<Restaurant> restaurants = _service.getAll(pageable);
         ApiResponse<Page<Restaurant>> response = new ApiResponse<>(200, "List restaurants selected successfully", restaurants);
         return ResponseEntity.ok(response);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ApiResponse<Restaurant>> create(@Valid @RequestBody RestaurantDTO  user) {
       
@@ -59,46 +61,47 @@ public class RestaurantController {
         ApiResponse<Restaurant> response = new ApiResponse<>(200, "Restaurant add successfully", updated);
         return ResponseEntity.ok(response);
     }
-    @PostMapping("/{id}/plats")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("{id}/plats")
     public ResponseEntity<ApiResponse<Plat>> createPlats(@PathVariable Long id,@Valid @RequestBody PlatDTO  value) {
         Plat updated =_servicePlat.save(id,value); // peut lancer NotFoundException
         ApiResponse<Plat> response = new ApiResponse<>(200, "Plat add successfully", updated);
         return ResponseEntity.ok(response);
     }
 
-   
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public Restaurant getById(@PathVariable Long id) {
         return _service.get(id);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}/plats")
     public ResponseEntity<ApiResponse<Page<Plat>>> getPlatsRestaurant(@PathVariable Long id,@PageableDefault(page = 0, size = 10) Pageable pageable) {
         Page<Plat> restaurants = _servicePlat.getAll(id,pageable);
         ApiResponse<Page<Plat>> response = new ApiResponse<>(200, "List restaurants selected successfully", restaurants);
         return ResponseEntity.ok(response);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         _service.deleteRestaurant(id);
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/{id}/avis")
     public ResponseEntity<ApiResponse<Avis>> createAvis(@PathVariable Long id,@Valid @RequestBody AvisDTO  value) {
         Avis updated =_serviceAvis.save(id,value);
         ApiResponse<Avis> response = new ApiResponse<>(200, "Avis add successfully", updated);
         return ResponseEntity.ok(response);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
      @GetMapping("/{id}/avis")
     public ResponseEntity<ApiResponse<Page<Avis>>> getAvis(@PathVariable Long id,@PageableDefault(page = 0, size = 10) Pageable pageable) {
          Page<Avis> updated =_serviceAvis.getAll(id,pageable);
         ApiResponse<Page<Avis>> response = new ApiResponse<>(200, "Avis selected successfully", updated);
         return ResponseEntity.ok(response);
     }
-    
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
      @GetMapping("/{id}/note-moyenne-et-avis")
     public ResponseEntity<ApiResponse<NoteMoyenRestaurantDTO>> getNoteMoyenneEtNombreAvis(
             @PathVariable("id") Long restaurantId) {
@@ -108,7 +111,7 @@ public class RestaurantController {
         
         return ResponseEntity.ok(response);
     }
-   
+   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/top")
     public ResponseEntity<ApiResponse<List<TopRestaurantDTO>> > getTopRestaurants(Pageable pageable) {
 
@@ -116,6 +119,7 @@ public class RestaurantController {
         ApiResponse<List<TopRestaurantDTO>> response = new ApiResponse<>(200, "Avis selected successfully", top);
         return ResponseEntity.ok(response);
     }
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/hateoas/{id}")
     public ResponseEntity<EntityModel<Map<String, Object>>> getRestaurant(@PathVariable Long id) {
 
@@ -145,7 +149,7 @@ public class RestaurantController {
 
         return ResponseEntity.ok(resource);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("filter")
     public ResponseEntity<Page<Restaurant>> getRestaurants(
             @RequestParam(required = false) String ville,

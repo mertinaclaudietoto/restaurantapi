@@ -29,17 +29,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    // // 🔹 récupérer utilisateur connecté
-    // @GetMapping("/me")
-    // public Users getCurrentUser(@RequestHeader("Authorization") String token) {
-    //     return service.getCurrentUser(token);
-    // }
-
-    // // 🔹 refresh token
-    // @PostMapping("/refresh")
-    // public String refreshToken(@RequestHeader("Authorization") String token) {
-    //     return service.refreshToken(token);
-    // }
+    
     
     @PostMapping("/logout")
     public String logout() {
