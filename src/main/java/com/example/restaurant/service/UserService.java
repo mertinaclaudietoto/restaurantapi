@@ -45,7 +45,7 @@ public class UserService {
         users.setPseudo(userDTO.getPseudo());
         users.setEmail(userDTO.getEmail());
         users.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        users.setIdrole(2L);
+        users.setIdrole(1L);
         userRepository.save(users);
         return  buildRetourUserResponseDTO(users);
     }
