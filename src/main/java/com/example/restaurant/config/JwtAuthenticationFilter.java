@@ -1,23 +1,23 @@
 package com.example.restaurant.config;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.restaurant.dto.ApiResponse;
-import  com.example.restaurant.service.JwtService;
+import com.example.restaurant.service.JwtService;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
+import  jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tools.jackson.databind.ObjectMapper;
@@ -67,14 +67,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println(roles);
             logger.info("User role"+roles);
 
+            UserDetails user = User.builder()
+            .username(claims.get("email", String.class))
+            .password("") // pas besoin du mot de passe ici
+            .authorities(roles) // on peut passer directement "ROLE_USER" ou "ROLE_ADMIN"
+            .build();
+
             UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            claims.get("email", String.class),
-                            null,
-                            List.of(new SimpleGrantedAuthority(roles))
-                    );
+                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
-        }
+                    }
 
         filterChain.doFilter(request, response);
     }
