@@ -27,7 +27,7 @@ public class SecurityConfig {
         UserDetails user = User.builder()
                 .username("mertina")
                 .password(passwordEncoder.encode("123"))
-                .roles("USER")
+                .roles("ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user);
@@ -50,11 +50,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())  
-                
+
                 .httpBasic(basic -> basic.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/h2-console/**", "/api/users/register","/api/auth/login", "/swagger-ui/**").permitAll()
+                    .requestMatchers("/h2-console/**", "/api/users/register","/api/auth/**", "/swagger-ui/**").permitAll()
                     // .requestMatchers("/admin/**").hasRole("ADMIN")
                     // .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                     .anyRequest().authenticated()
