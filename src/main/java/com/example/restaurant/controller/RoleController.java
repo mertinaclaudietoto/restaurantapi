@@ -33,7 +33,7 @@ public class RoleController {
     public List<Role> getRole() {
         return roleService.getAllRole();
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public Role createUser(@RequestBody RoleDTO user) {
         return roleService.save(user);
