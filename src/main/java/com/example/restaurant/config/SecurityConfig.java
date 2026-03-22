@@ -59,7 +59,9 @@ public class SecurityConfig {
                     "/h2-console/**",
                     "/api/users/register",
                     "/api/auth/**",
-                    "/swagger-ui/**"
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/v3/api-docs/**"
                 ).permitAll()
                 // Exemples pour rôles (décommente si besoin)
                 // .requestMatchers("/admin/**").hasRole("ADMIN")
